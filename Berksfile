@@ -10,4 +10,4 @@ cookbook "drush", github: "benclark/chef-drush"
 
 # Custom
 cookbook "jr-hosted-springboard", github: "JacksonRiver/chef-jr-hosted-cookbook", protocol: :ssh
-cookbook "jrdevsetup", path: "/Users/bclark/Sites/chef/cookbooks/jrdevsetup"
+cookbook "jrdevsetup", github: "JacksonRiver/chef-jrdevsetup"
