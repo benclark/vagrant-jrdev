@@ -29,15 +29,28 @@ Vagrant.configure("2") do |config|
 
   # Provisoning
   config.vm.provision "chef_solo" do |chef|
-    chef.log_level = :debug
-    chef.data_bags_path = "data_bags"
-    chef.environments_path = "environments"
-    chef.environment = "vagrant"
+    chef.log_level = :debug if !(ENV['CHEF_DEBUG']).nil?
+    chef.data_bags_path = "data_bags" if File.directory?(File.expand_path(File.dirname(__FILE__)) + "/data_bags")
     chef.run_list = [
       # Base
       "recipe[apt]",
       # Custom
       "recipe[jrdevsetup]"
     ]
+    chef.json = {
+      "avahi" => {
+        "deny_interfaces" => [ "eth0" ]
+      },
+      "mysql" => {
+        "bind_address" => "0.0.0.0",
+        "server_root_password" => "root",
+        "server_debian_password" => "debpass",
+        "server_repl_password" => "replpass",
+        "tunable" => {
+          "innodb_buffer_pool_size" => "128M",
+          "key_buffer_size" => "16M"
+        }
+      }
+    }
   end
 end
