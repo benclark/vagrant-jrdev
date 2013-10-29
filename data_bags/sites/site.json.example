@@ -1,8 +1,0 @@
-{
-  "id": "example",
-  "domain_name": "example.local",
-  "domain_aliases": [ "example1.local", "example2.local" ],
-  "docroot": "/mnt/sites/example/repo",
-  "db_name": "example"
-}
-
