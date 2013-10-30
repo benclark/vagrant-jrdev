@@ -1,6 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+def in_drupal_root?
+  File.exist?(File.expand_path('modules/system/system.module'))
+end
+
 Vagrant.configure("2") do |config|
   # Box
   config.vm.box = "squeeze32-vanilla"
@@ -16,9 +20,17 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "jrdev"
   config.vm.network :private_network, ip: "192.168.47.100"
 
-  # Share the sites directory over NFS (if possible)
-  sites_dir = "~/Sites"
-  sites_mount_dir = "/mnt/sites"
+  # Are we within a Drupal root?
+  if in_drupal_root?
+    sites_dir = "."
+    sites_mount_dir = "/var/www/vhosts/default"
+  else
+    # @todo - make this configurable
+    sites_dir = "~/Sites"
+    sites_mount_dir = "/mnt/sites"
+  end
+
+  # Share the sites_dir, over NFS if possible.
   config.vm.synced_folder sites_dir, sites_mount_dir, :nfs => (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
 
   # Provider config
@@ -52,5 +64,12 @@ Vagrant.configure("2") do |config|
         }
       }
     }
+    if in_drupal_root?
+      # Add some sane defaults for a given project.
+      chef.json["jrdevsetup"] = {
+        "domain_name" => nil,
+        "docroot" => "/var/www/vhosts/default"
+      }
+    end
   end
 end
