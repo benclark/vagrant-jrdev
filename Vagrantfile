@@ -58,6 +58,7 @@ Vagrant.configure("2") do |config|
         "server_root_password" => "root",
         "server_debian_password" => "debpass",
         "server_repl_password" => "replpass",
+        "allow_remote_root" => true,
         "tunable" => {
           "innodb_buffer_pool_size" => "128M",
           "key_buffer_size" => "16M"
